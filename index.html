@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maverick AI – Professional Candidate Screening</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-purple: #7c3aed;
+            --primary-purple-hover: #6d28d9;
+            --purple-glow: rgba(124, 58, 237, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --text-main: #1e1e2f;
+            --text-muted: #6b7280;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 12s infinite alternate ease-in-out;
+        }
+        .shape1 {
+            width: 450px; height: 450px;
+            background: #c4b5fd;
+            top: -10%; left: -5%;
+        }
+        .shape2 {
+            width: 550px; height: 550px;
+            background: #ddd6fe;
+            bottom: -15%; right: -10%;
+            animation-delay: -5s;
+        }
+        .shape3 {
+            width: 300px; height: 300px;
+            background: rgba(124, 58, 237, 0.2);
+            top: 40%; left: 40%;
+            animation-duration: 15s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, -50px) scale(1.1); }
+        }
+
+        .chat-wrapper {
+            width: 100%;
+            max-width: 750px;
+            height: 90vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.4);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #a78bfa, var(--primary-purple));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 15px var(--purple-glow);
+        }
+
+        .header-info h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .header-info span {
+            font-size: 13px;
+            color: var(--primary-purple);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 30px 32px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .messages::-webkit-scrollbar { width: 6px; }
+        .messages::-webkit-scrollbar-track { background: transparent; }
+        .messages::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+
+        .message {
+            max-width: 85%;
+            padding: 16px 22px;
+            border-radius: 24px;
+            line-height: 1.6;
+            font-size: 15px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            animation: slideUp 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary-purple), #5b21b6);
+            color: white;
+            border-bottom-right-radius: 8px;
+            box-shadow: 0 4px 15px var(--purple-glow);
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            border-bottom-left-radius: 8px;
+        }
+
+        .in-bubble-upload {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .futuristic-upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--primary-purple);
+            padding: 12px 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        .futuristic-upload-btn:hover {
+            background: var(--primary-purple);
+            color: white;
+            box-shadow: 0 4px 15px var(--purple-glow);
+            transform: translateY(-2px);
+        }
+
+        .futuristic-upload-btn svg {
+            width: 18px; height: 18px;
+            fill: currentColor;
+        }
+
+        .upload-success {
+            font-size: 13px;
+            color: #10b981;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 0;
+        }
+
+        .message .file-indicator {
+            font-size: 0.85em;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-top: 8px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .input-area {
+            padding: 20px 32px;
+            background: rgba(255, 255, 255, 0.4);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 16px;
+            align-items: flex-end;
+        }
+
+        .input-area textarea {
+            flex: 1;
+            border: 1px solid rgba(0,0,0,0.1);
+            resize: none;
+            padding: 16px 20px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.7);
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--text-main);
+            outline: none;
+            max-height: 120px;
+            min-height: 56px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .input-area textarea:focus {
+            background: white;
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+        }
+
+        .input-area button {
+            background: var(--primary-purple);
+            border: none;
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--purple-glow);
+        }
+
+        .input-area button svg {
+            width: 20px; height: 20px;
+            fill: white;
+            transform: translateX(2px);
+        }
+
+        .input-area button:hover:not(:disabled) {
+            background: var(--primary-purple-hover);
+            transform: scale(1.05);
+        }
+
+        .input-area button:disabled {
+            background: #cbd5e1;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .typing-indicator {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--glass-border);
+            padding: 14px 20px;
+            border-radius: 24px;
+            border-bottom-left-radius: 8px;
+            display: flex;
+            gap: 6px;
+            animation: slideUp 0.3s ease forwards;
+        }
+
+        .typing-indicator span {
+            width: 8px; height: 8px;
+            background: var(--primary-purple);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 12px;
+            background: transparent;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-shape shape1"></div>
+<div class="bg-shape shape2"></div>
+<div class="bg-shape shape3"></div>
+
+<div class="chat-wrapper">
+    <div class="header">
+        <div class="header-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7v5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-5a7 7 0 0 1 7-7h1V5.73A2 2 0 0 1 12 2z"></path>
+                <line x1="12" y1="11" x2="12" y2="15"></line>
+                <line x1="9" y1="13" x2="15" y2="13"></line>
+            </svg>
+        </div>
+        <div class="header-info">
+            <h1>Maverick AI</h1>
+            <span>Intelligent Screening</span>
+        </div>
+    </div>
+    
+    <div class="messages" id="messages">
+        <!-- Messages will appear here -->
+    </div>
+    
+    <div class="input-area">
+        <textarea id="userInput" rows="1" placeholder="Type your message..." disabled></textarea>
+        <button id="sendBtn" disabled>
+            <svg viewBox="0 0 24 24">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+            </svg>
+        </button>
+    </div>
+    <div class="footer-note">🔒 Secured by Maverick Core • Real-time Agent</div>
+</div>
+
+<script>
+    // ---------- State ----------
+    // let sessionId = localStorage.getItem('maverick_session') || crypto.randomUUID();
+        // ---------- State ----------
+    // Generate a brand new session ID every time the page loads or is refreshed
+    let sessionId = crypto.randomUUID();
+    localStorage.setItem('maverick_session', sessionId);
+
+    const messagesDiv = document.getElementById('messages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    let isProcessing = false;
+
+    // ---------- Helpers ----------
+    function addMessage(role, content, fileInfo = null) {
+        const div = document.createElement('div');
+        div.className = `message ${role}`;
+        
+        let innerHTML = `<div class="msg-content">${content}</div>`;
+
+        if (fileInfo) {
+            innerHTML += `<div class="file-indicator">📄 ${fileInfo}</div>`;
+        }
+
+        div.innerHTML = innerHTML;
+
+        if (role === 'bot' && content.toLowerCase().includes('upload your resume')) {
+            const uploadDiv = document.createElement('div');
+            uploadDiv.className = 'in-bubble-upload';
+            uploadDiv.innerHTML = `
+                <label class="futuristic-upload-btn">
+                    <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"></path></svg>
+                    <span>Attach Resume (PDF/DOC)</span>
+                    <input type="file" accept=".pdf,.doc,.docx" style="display:none;" />
+                </label>
+            `;
+            
+            const fileInput = uploadDiv.querySelector('input');
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const msg = userInput.value.trim() || "Here is my resume.";
+                    sendMessage(msg, file);
+                    userInput.value = '';
+                    uploadDiv.innerHTML = `<div class="upload-success">✓ ${file.name} attached successfully!</div>`;
+                }
+            });
+
+            div.appendChild(uploadDiv);
+        }
+
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function showTyping() {
+        const div = document.createElement('div');
+        div.className = 'typing-indicator';
+        div.id = 'typing';
+        div.innerHTML = '<span></span><span></span><span></span>';
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function hideTyping() {
+        const el = document.getElementById('typing');
+        if (el) el.remove();
+    }
+
+    function setInputEnabled(enabled) {
+        userInput.disabled = !enabled;
+        sendBtn.disabled = !enabled;
+        if (!enabled) {
+            userInput.value = '';
+        }
+        userInput.focus();
+    }
+
+        // ---------- Send Message ----------
+    async function sendMessage(text, file = null) {
+        if (isProcessing) return;
+        isProcessing = true;
+        setInputEnabled(false);
+
+        if (text || file) {
+            addMessage('user', text, file ? file.name : null);
+        }
+
+        showTyping();
+
+        try {
+            const formData = new FormData();
+            formData.append('session_id', sessionId);
+            if (text) formData.append('message', text);
+            if (file) formData.append('file', file);
+
+            const res = await fetch('/chat', {
+                method: 'POST',
+                body: formData
+            });
+            
+            // 🔍 FLIGHT RECORDER: Get raw text first to see EXACTLY what the server sent
+            const rawText = await res.text();
+            console.log("🔴 RAW SERVER RESPONSE:", rawText);
+            
+            let data;
+            try {
+                data = JSON.parse(rawText);
+            } catch (parseErr) {
+                hideTyping();
+                addMessage('bot', `🚨 JSON PARSE ERROR: Server sent invalid JSON. Raw: ${rawText.substring(0, 150)}`);
+                setInputEnabled(true);
+                isProcessing = false;
+                return;
+            }
+
+            if (!data) {
+                hideTyping();
+                addMessage('bot', `🚨 NULL ERROR: Server returned null.`);
+                setInputEnabled(true);
+                isProcessing = false;
+                return;
+            }
+
+            hideTyping();
+
+            if (data.response) {
+                addMessage('bot', data.response);
+            } else {
+                addMessage('bot', `🚨 MISSING RESPONSE KEY: ${JSON.stringify(data)}`);
+            }
+
+            if (data.session_id) {
+                sessionId = data.session_id;
+            }
+
+            if (data.done) {
+                setInputEnabled(false);
+                sendBtn.style.opacity = '0.5';
+            } else {
+                setInputEnabled(true);
+            }
+        } catch (err) {
+            hideTyping();
+            addMessage('bot', `🚨 FRONTEND ERROR: ${err.message || err.toString()}`);
+            setInputEnabled(true);
+            console.error("🔴 FULL BROWSER ERROR:", err);
+        }
+        isProcessing = false;
+    }
+
+    // ---------- Events ----------
+    userInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (userInput.value.trim()) {
+                sendMessage(userInput.value.trim());
+                userInput.value = '';
+            }
+        }
+    });
+
+    sendBtn.addEventListener('click', () => {
+        if (userInput.value.trim()) {
+            sendMessage(userInput.value.trim());
+            userInput.value = '';
+        }
+    });
+
+    // ---------- Init ----------
+    async function init() {
+        await sendMessage('', null);
+        setInputEnabled(true);
+    }
+
+    init();
+</script>
+</body>
+</html>
